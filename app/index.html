@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff6e0">
+  <meta name="description" content="AeroEar 智能耳压：基于气压趋势预测的左右耳分别调节">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/toon.css">
+  <title>AeroEar 智能耳压</title>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <img src="icons/icon.svg" alt="" width="34" height="34">
+        <div><b>AeroEar</b><small>智能耳压</small></div>
+      </div>
+      <div class="top-actions">
+        <button class="conn" id="connChip" aria-label="连接状态"><i class="lamp"></i><span>--</span></button>
+        <button class="icon-btn" id="btnSettings" aria-label="设置" data-icon="gear"></button>
+      </div>
+    </header>
+
+    <main id="views">
+      <section class="view active" id="view-live">
+        <div class="hero" id="hero">
+          <div class="win">
+            <div class="win-in">
+              <canvas id="scene"></canvas>
+              <div class="shade" id="shade"><div class="shade-lines"></div></div>
+              <button class="shade-tab" id="shadeTab" aria-label="拉下遮光帘（夜航模式）"><i></i></button>
+              <div class="win-top">
+                <span class="phase-pill" id="phasePill">地面</span>
+                <span class="win-hint" id="winLabel">5 分钟 · 点击切换</span>
+              </div>
+              <div class="win-hud">
+                <div class="p-big"><b id="pAmb">----.-</b><small>hPa</small></div>
+                <div class="p-sub"><span id="altLabel">估算海拔</span> <b id="altv">--</b> m</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-stats">
+            <div><small>气压变化</small><b id="rate">--</b><i>hPa/min</i></div>
+            <div><small>升降速度</small><b id="vs">--</b><i>m/min</i></div>
+            <div class="mag"><small>30 秒后预计</small><b id="pred">--</b><i>hPa</i></div>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <span class="sp"><small>场景</small><b id="fmaMode">FLT</b></span>
+          <span class="sp"><small>阶段</small><b id="fmaPhase">GND</b></span>
+          <span class="sp"><small>预测</small><b id="fmaPred">PRED</b></span>
+          <span class="sp"><small>保护</small><b id="fmaProt">ARMED</b></span>
+        </div>
+
+        <div class="caution hidden" id="eventBanner"></div>
+
+        <div class="sec-title"><span>左右耳压差</span><em id="symCount">感觉闷就点一下</em></div>
+        <div class="ears" id="ears"></div>
+
+        <div class="ctrls">
+          <button class="ctl" id="btnPredict"><span class="bub-ic" data-icon="sparkle"></span><b>预测调节</b><small id="predState">ON</small></button>
+          <button class="ctl" id="btnCoach"><span class="bub-ic mint" data-icon="ear"></span><b>吞咽教练</b><small>60 秒引导</small></button>
+          <button class="ctl vent" id="btnVent"><span class="bub-ic amber" data-icon="wind"></span><b>一键泄压</b><small>两侧全开</small></button>
+        </div>
+
+        <div class="panel nd">
+          <div class="panel-title"><span>耳道追赶座舱</span>
+            <span class="legend"><span><i class="l"></i>左</span><span><i class="r"></i>右</span><span><i class="band"></i>舒适带</span></span></div>
+          <canvas id="chartDp" class="chart small"></canvas>
+          <p class="chart-note">曲线离 0 越远 = 耳道落后座舱越多；回到 0 = 已追平。左右耳可以有不同的追赶节奏。</p>
+        </div>
+        <p class="footnote">舒适辅助设备，不能替代医疗诊断。耳痛、听力下降或眩晕请立即取下并就医。</p>
+      </section>
+
+      <section class="view" id="view-trip"></section>
+      <section class="view" id="view-ears"></section>
+      <section class="view" id="view-records"></section>
+    </main>
+
+    <nav class="tabbar">
+      <button class="on" data-tab="live"><span data-icon="window"></span><span class="tl">舷窗</span></button>
+      <button data-tab="trip"><span data-icon="plane"></span><span class="tl">航程</span></button>
+      <button data-tab="ears"><span data-icon="ear"></span><span class="tl">双耳</span></button>
+      <button data-tab="records"><span data-icon="records"></span><span class="tl">日志</span></button>
+    </nav>
+  </div>
+
+  <div class="sheet-wrap" id="sheetWrap" hidden>
+    <div class="sheet-backdrop"></div>
+    <div class="sheet" id="sheet"></div>
+  </div>
+  <div id="toast" role="status"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
