@@ -1,5 +1,5 @@
 // 离线缓存：应用外壳缓存优先，更新版本时修改 VERSION
-const VERSION = 'aeroear-v1.5.1';
+const VERSION = 'aeroear-v1.5.2';
 const SHELL = [
   './',
   './index.html',

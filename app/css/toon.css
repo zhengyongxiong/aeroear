@@ -281,3 +281,10 @@ input[type=range]::-webkit-slider-thumb { width: 30px; height: 30px; background:
 .oc-lag.lag { background: #ffe27a; } .oc-lag.catch { background: var(--lav); } .oc-lag.done { background: var(--mintl); }
 .chart-note { margin: 2px 16px 0; font-size: 11.5px; color: var(--sub); line-height: 1.5; }
 .bp-sel { width: 100%; margin-top: 4px; padding: 8px 10px; font-size: 13px; font-weight: 750; border-radius: 12px; box-shadow: 0 2px 0 var(--ink); }
+
+.chk-list { list-style: none; margin: 10px 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.chk { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 2.5px solid var(--ink); border-radius: 16px; background: #fff; font-weight: 750; font-size: 14px; }
+.chk b { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--ink); flex: none; font-size: 13px; }
+.chk.ok b { background: var(--mintl); } .chk.bad { background: #fff0a8; } .chk.bad b { background: var(--red); color: #fff; }
+.chk small { display: block; font-weight: 600; color: var(--sub); font-size: 12px; margin-top: 2px; line-height: 1.5; }
+.steps { padding-left: 22px; margin: 6px 0 10px; } .steps li { padding: 4px 0; font-size: 14px; line-height: 1.6; }

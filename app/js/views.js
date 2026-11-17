@@ -1055,7 +1055,7 @@ export function openSettings() {
       <button class="btn ghost block" id="briefBtn">${ICON.info}重看安全简报</button>
     </div>
     <div class="set-group">
-      ${api.install ? `<button class="btn primary block" id="instBtn">${ICON.download}安装到手机桌面</button>` : ''}
+      ${isStandalone() ? `<p class="muted small center">✓ 已作为应用安装使用</p>` : `<button class="btn primary block" id="instBtn">${ICON.download}安装到手机桌面</button>`}
       <button class="btn ghost block danger-text" id="clrBtn">${ICON.trash}清除所有记录</button>
       <p class="muted small center">AEROEAR v1.1 · 数据仅保存在本机</p>
     </div>`);
@@ -1110,6 +1110,7 @@ export function openSettings() {
   $('#safeBtn', sh).onclick = openSafety;
   $('#briefBtn', sh).onclick = openOnboarding;
   $('#instBtn', sh)?.addEventListener('click', async () => {
+    if (!api.install) return openInstallHelp();
     api.install.prompt();
     await api.install.userChoice;
     api.install = null;
@@ -1121,6 +1122,35 @@ export function openSettings() {
     renderRecords();
     toast('已清除');
   };
+}
+
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+// 安装帮助：检测当前环境，告诉用户为什么没有一键安装、该怎么装
+function openInstallHelp() {
+  const ua = navigator.userAgent;
+  const inApp = /MicroMessenger|QQ\/|MQQBrowser|UCBrowser|Quark|baiduboxapp|Weibo|DingTalk|Alipay/i.test(ua);
+  const chrome = /Chrome\//.test(ua) && !/EdgA|OPR\/|SamsungBrowser|MiuiBrowser|HuaweiBrowser|HeyTap|VivoBrowser/i.test(ua) && !inApp;
+  const android = /Android/i.test(ua);
+  const secure = window.isSecureContext;
+  const row = (ok, text, fix) => `<li class="chk ${ok ? 'ok' : 'bad'}"><b>${ok ? '✓' : '✗'}</b><span>${text}${!ok && fix ? `<small>${fix}</small>` : ''}</span></li>`;
+  openSheet(`
+    <span class="eyebrow">INSTALL</span>
+    <h2>安装到手机桌面</h2>
+    <p class="muted">这个浏览器没有给出"一键安装"，先看下面哪一项没通过：</p>
+    <ul class="chk-list">
+      ${row(secure, '安全连接（https）', '请用 https:// 开头的网址打开，不要用 http 的局域网地址')}
+      ${row(android, '安卓手机', 'iPhone 请用 Safari：点分享 → 添加到主屏幕')}
+      ${row(chrome, 'Chrome 浏览器', inApp ? '你正在微信/QQ/夸克等内置浏览器里，请点右上角"在浏览器打开"，选 Chrome' : '请改用 Chrome；华为/小米/OPPO 自带浏览器通常没有安装功能')}
+    </ul>
+    <h4>手动安装步骤（Chrome）</h4>
+    <ol class="steps">
+      <li>点右上角 <b>⋮</b> 菜单</li>
+      <li>选 <b>「安装应用」</b>（有的版本叫「添加到主屏幕」，再点「安装」）</li>
+      <li>桌面出现 AeroEar 图标，就装好了</li>
+    </ol>
+    <p class="muted small">如果菜单里一直没有"安装应用"：清除这个网站的数据后刷新一次，再等几秒；之前点过"取消"，Chrome 会暂时不再提示。</p>
+    <button class="btn primary block" data-act="close">我知道了</button>`);
 }
 
 function openSafety() {
